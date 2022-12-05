@@ -28,6 +28,54 @@ verifyToken = (req, res, next ) => {
         next();
     });
 };
+isKaprodi = (req, res, next) => {
+    User.findByPk(req.userId).then(user => {
+        user.getRoles().then(roles => {
+            for (let i = 0; i < roles.length; i++) {
+                if (roles[i].name === "kaprodi") {
+                    next();
+                    return;
+                }
+            }
+            res.status(403).send({
+                message: "Require Kaprodi Role!"
+            });
+            return;
+        });
+    });
+};
+isKadep = (req, res, next) => {
+    User.findByPk(req.userId).then(user => {
+        user.getRoles().then(roles => {
+            for (let i = 0; i < roles.length; i++) {
+                if (roles[i].name === "kadep") {
+                    next();
+                    return;
+                }
+            }
+            res.status(403).send({
+                message: "Require Kadep Role!"
+            });
+            return;
+        });
+    });
+};
+isWadir = (req, res, next) => {
+    User.findByPk(req.userId).then(user => {
+        user.getRoles().then(roles => {
+            for (let i = 0; i < roles.length; i++) {
+                if (roles[i].name === "wadir") {
+                    next();
+                    return;
+                }
+            }
+            res.status(403).send({
+                message: "Require Wadir Role!"
+            });
+            return;
+        });
+    });
+};
 isAdmin = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
         user.getRoles().then(roles => {
@@ -54,8 +102,24 @@ isDirector = (req, res, next) => {
                 }
             }
             res.status(403).send({
-                message: "Require Moderator Role!"
+                message: "Require Director Role!"
             });
+        });
+    });
+};
+isStaff = (req, res, next) => {
+    User.findByPk(req.userId).then(user => {
+        user.getRoles().then(roles => {
+            for (let i = 0; i < roles.length; i++) {
+                if (roles[i].name === "staff") {
+                    next();
+                    return;
+                }
+            }
+            res.status(403).send({
+                message: "Require Staff Role!"
+            });
+            return;
         });
     });
 };
@@ -63,7 +127,23 @@ isDirectorOrAdmin = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
         user.getRoles().then(roles => {
             for (let i = 0; i < roles.length; i++) {
+                if (roles[i].name === "kaprodi") {
+                    next();
+                    return;
+                }
+                if (roles[i].name === "kadep") {
+                    next();
+                    return;
+                }
+                if (roles[i].name === "wadir") {
+                    next();
+                    return;
+                }
                 if (roles[i].name === "director") {
+                    next();
+                    return;
+                }
+                if (roles[i].name === "staff") {
                     next();
                     return;
                 }
@@ -73,15 +153,19 @@ isDirectorOrAdmin = (req, res, next) => {
                 }
             }
             res.status(403).send({
-                message: "Require Director or Admin Role!"
+                message: "Require Kaprodi or Kadep or Wadir or Director or Staff or Admin Role!"
             });
         });
     });
 };
 const authJwt = {
     verifyToken: verifyToken,
-    isAdmin: isAdmin,
+    isKaprodi: isKaprodi,
+    isKadep: isKadep,
+    isWadir: isWadir,
     isDirector: isDirector,
+    isStaff: isStaff,
+    isAdmin: isAdmin,
     isDirectorOrAdmin: isDirectorOrAdmin
 };
 module.exports = authJwt;

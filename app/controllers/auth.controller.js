@@ -122,6 +122,18 @@ exports.signup = (req, res) => {
       })
   })
   };
+  exports.getAuthExceptSubmission = (req, res) => {
+    const { username, position } = req.params;
+    pool.query(queries.getDataExceptSubmission, [username, position]).then((result) => {
+      return res.status(200).json(result.rows)
+    })
+    .catch( e => {
+      console.log('error mengambil data', e)
+      return res.status('500').json({
+          message: "Gagal mengambil data"
+      })
+  })
+  };
   exports.getAuthExecutive = (req, res) => {
     pool.query(queries.getDataDireksi).then((result) => {
       return res.status(200).json(result.rows)

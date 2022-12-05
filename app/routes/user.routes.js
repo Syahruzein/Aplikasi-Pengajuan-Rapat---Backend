@@ -10,14 +10,29 @@ module.exports = function(app) {
   });
   app.get("/api/test/all", controller.allAccess);
   app.get(
-    "/api/test/user",
-    [authJwt.verifyToken],
-    controller.userBoard
+    "/api/test/kaprodi",
+    [authJwt.verifyToken, authJwt.isKaprodi],
+    controller.kaprodiBoard
   );
   app.get(
-    "/api/test/dir",
+    "/api/test/kadep",
+    [authJwt.verifyToken, authJwt.isKadep],
+    controller.kadepBoard
+  );
+  app.get(
+    "/api/test/wadir",
+    [authJwt.verifyToken, authJwt.isWadir],
+    controller.wadirBoard
+  );
+  app.get(
+    "/api/test/director",
     [authJwt.verifyToken, authJwt.isDirector],
     controller.directorBoard
+  );
+  app.get(
+    "/api/test/staff",
+    [authJwt.verifyToken, authJwt.isStaff],
+    controller.staffBoard
   );
   app.get(
     "/api/test/admin",

@@ -25,8 +25,9 @@ module.exports = function(app) {
     controller.signup
   );
   app.post("/api/auth/signin", controller.signin);
-  app.get("/api/auth/user", controller.getAuthAll); 
+  app.get("/api/auth/user", controller.getAuthAll);
   app.get("/api/auth/user-invite/:username", controller.getAuthExcept);
+  app.get("/api/auth/user-invite-submission/:username/:position", controller.getAuthExceptSubmission);
   app.get("/api/auth/director", controller.getAuthDirector);
   app.get("/api/auth/director-wadir", controller.getAuthExecutive);
   app.get("/api/auth/user-by-position/:position", controller.getAuthName)

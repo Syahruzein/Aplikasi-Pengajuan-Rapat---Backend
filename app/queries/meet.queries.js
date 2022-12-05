@@ -1,7 +1,9 @@
 const getDataAll = "SELECT * FROM meetings";
+const getDataByDate = "SELECT * FROM meetings WHERE tanggal = $1";
 const getDataProcess = "SELECT * FROM meetings WHERE status='1'";
 const getDataProcessById = "SELECT * FROM meetings WHERE user_id= $1 AND status='1'";
 const getDataProcessByPosition = "SELECT * FROM meetings WHERE receiver = $1 AND status = '1'";
+const getDataProcessAndVerified = "SELECT * FROM meetings WHERE status='1' OR status='2'";
 const getDataVerified = "SELECT * FROM meetings WHERE status='2'";
 const getDataVerifiedById = "SELECT * FROM meetings WHERE user_id = $1 AND status = '2'";
 const getDataVerifiedByUsername = "SELECT * FROM meetings WHERE $1 = ANY(participants) AND status = '2'";
@@ -38,9 +40,11 @@ const countDataRejectById = "SELECT COUNT(*) FROM meetings WHERE user_id= $1 AND
 
 module.exports = {
     getDataAll,
+    getDataByDate,
     getDataProcess,
     getDataProcessById,
     getDataProcessByPosition,
+    getDataProcessAndVerified,
     getDataVerified,
     getDataVerifiedById,
     getDataVerifiedByUsername,

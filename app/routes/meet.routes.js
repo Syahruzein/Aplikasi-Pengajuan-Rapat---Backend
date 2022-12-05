@@ -1,4 +1,4 @@
-// const { verifyMeet } =  require('../middleware');
+const { verifyMeet } =  require('../middleware');
 const {Router} = require("express");
 
 const router = Router();
@@ -7,7 +7,7 @@ const controller = require('../controllers/meet.controller'); // ke controller p
 
 // authJwt.verifyToken
 router.get('/all', controller.getMeetAll);
-
+router.get('/all-by-date/:tanggal', controller.getMeetByDate);
 router.get('/process/:user_id', 
             // [
             //     verifyMeet.checkUserData
@@ -16,6 +16,7 @@ router.get('/process/:user_id',
             );
 router.get('/process-receiver/:receiver', controller.getMeetProcessByPosition);
 router.get('/process-all', controller.getMeetProcess);
+router.get('/process-and-success', controller.getMeetProcessAndVerified);
 router.get('/success', controller.getMeetVerified);
 router.get('/success-id/:user_id', controller.getMeetVerifiedById);
 router.get('/success-users/:participants', controller.getMeetVerifiedByUsername);
@@ -33,13 +34,23 @@ router.get('/finish-id-receiver-invite/:user_id/:receiver/:participants', contro
 router.get('/reject/:user_id', controller.getMeetRejectById);
 // router.get('/:id', controller.getMeet); // path URL 
 router.post('/submission',
-        // [
-        //     verifyMeet.checkDuplicateDate
-        // ],
+        [
+            verifyMeet.checkDuplicateDate
+        ],
         controller.addMeet
     );
-router.put('/update-process', controller.updateMeet);
-router.put('/update-success', controller.updateMeetSuccess);
+router.put('/update-process', 
+        [
+            verifyMeet.checkDuplicateDate
+        ],
+        controller.updateMeet
+    );
+router.put('/update-success', 
+        [
+            verifyMeet.checkDuplicateDate
+        ],
+        controller.updateMeetSuccess
+    );
 router.put('/update-finished', controller.updateMeetFinish);
 router.put('/update-reject', controller.updateMeetReject);
 router.delete('/:id', controller.deleteMeet);

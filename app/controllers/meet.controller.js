@@ -1,11 +1,28 @@
 const pool = require('../config/db');
+const db = require("../models");
 const queries = require('../queries/meet.queries');
 const queried = require('../queries/notulen.queries');
+
+const Meet = db.meet;
+const moment = require('moment');
+const { meet } = require('../models');
 
 const getMeetAll = (req, res) => {
     pool.query(queries.getDataAll).then((result) => {
         return res.status(200).json(result.rows)
     });
+};
+
+const getMeetByDate = (req, res) => {
+    const { tanggal } = req.params;
+    pool.query(queries.getDataByDate, [tanggal]).then((result) => {
+        return res.status(200).json(result.rows)
+    }).catch( e => {
+        console.log(e, 'Error mengambil data')
+        return res.status(500).json({
+            message: "Gagal mengambil data"
+        })
+    })
 };
 
 const getMeetProcessById = (req, res) => {
@@ -42,6 +59,12 @@ const getMeetProcessByPosition = (req, res) => {
         })
     })
 }
+
+const getMeetProcessAndVerified = (req, res) => {
+    pool.query(queries.getDataProcessAndVerified).then((result) => {
+        return res.status(200).json(result.rows)
+    });
+};
 
 const getMeetVerified = (req, res) => {
     pool.query(queries.getDataVerified).then((result) => {
@@ -240,7 +263,7 @@ const getMeetRejectById = (req, res) => {
 const addMeet = (req, res) => {
     // const user_id = user.id;
     const { perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, user_id, maker } = req.body;
-    if(perihal == '' || tempat == '' || tanggal == '' || waktu == '' || status == '' || receiver == '' || deskripsi == '' || user_id == '', maker == ''){
+    if(perihal == '' || tempat == '' || tanggal == '' || waktu == '' || status == '' || receiver == '' || deskripsi == '' || user_id == '' || maker == ''){
         return res.status('400').json({
             message: 'Perintah Ditolak'
         })
@@ -261,6 +284,11 @@ const addMeet = (req, res) => {
 
 const updateMeet = (req, res) => {
     const { perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, id } = req.body;
+    if(perihal == '' || tempat == '' || tanggal == '' || waktu == '' || status == '' || receiver == '' || participants == '' || deskripsi == '' || id == '' ){
+        return res.status(400).json({
+            message: 'Perintah ditolak'
+        })
+    }
     pool.query(queries.updateData, [ perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, id ]).then((result) => {
         return res.status('200').json({
             message: "Berhasil update data"
@@ -276,6 +304,11 @@ const updateMeet = (req, res) => {
 
 const updateMeetReject = (req, res) => {
     const { status, alasan, id} = req.body;
+    if( status == '' || alasan == '' || id == ''){
+        return res.status(400).json({
+            message: "Perintah ditolak"
+        })
+    }
     pool.query(queries.updateReject, [status, alasan, id]).then((result) => {
         return res.status('200').json({
             message: "Berhasil menolak rapat"
@@ -290,6 +323,11 @@ const updateMeetReject = (req, res) => {
 
 const updateMeetVerified = (req, res) => {
     const { perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, verified, id } = req.body;
+    if(perihal == '' || tempat == '' || tanggal == '' || waktu == '' || status == '' || receiver == '' || deskripsi == '' || verified == '' || id == ''){
+        return res.status(400).json({
+            message: "Perintah ditolak"
+        })
+    }
     pool.query(queries.updateDataVerified, [ perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, verified, id]).then((result) => {
         return res.status('200').json({
             message: "Berhasil update verifikasi data"
@@ -305,6 +343,11 @@ const updateMeetVerified = (req, res) => {
 
 const updateMeetSuccess = (req, res) => {
     const { perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, id } = req.body;
+    if(perihal == '' || tempat == '' || tanggal == '' || waktu == '' || status == '' || receiver == '' || deskripsi == '' || id == ''){
+        return res.status(400).json({
+            message: "Perintah ditolak"
+        })
+    }
     pool.query(queries.updateData, [ perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, id ]).then((result) => {
         return res.status('200').json({
             message: "Berhasil update data"
@@ -526,9 +569,11 @@ const countMeetRejectById = (req, res) => {
 
 module.exports = {
     getMeetAll,
+    getMeetByDate,
     getMeetProcessById,
     getMeetProcess,
     getMeetProcessByPosition,
+    getMeetProcessAndVerified,
     getMeetVerified,
     getMeetVerifiedById,
     getMeetVerifiedByUsername,
