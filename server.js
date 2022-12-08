@@ -5,12 +5,12 @@ const app = express();
 const rapatRoutes = require('./app/routes/meet.routes');
 const notulenRoutes = require('./app/routes/notulen.routes');
 
-var corsOptions = {
-    origin: "http://localhost:8200"
-};
-app.use(cors(corsOptions));
+// var corsOptions = {
+//     origin: "http://localhost:8200"
+// };
+// app.use(cors(corsOptions));
 
-app.use(cors({credentials: true, origin:"http://localhost:3000"}))
+app.use(cors({credentials: true, origin:"http://localhost:8200"}))
 
 app.use(bodyParser.json());
 
@@ -18,11 +18,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const db = require("./app/models");
 const Role = db.role;
-db.sequelize.sync();
-// db.sequelize.sync({force: true}).then(() => {
-//   console.log('Drop and Resync Db');
-//   initial();
-// });
+// db.sequelize.sync();
+db.sequelize.sync({force: true}).then(() => {
+  console.log('Drop and Resync Db');
+  initial();
+});
 
 app.get("/", (req, res) => {
     res.json({ message: "Welcome to syahru aplication" });
