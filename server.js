@@ -5,10 +5,10 @@ const app = express();
 const rapatRoutes = require('./app/routes/meet.routes');
 const notulenRoutes = require('./app/routes/notulen.routes');
 
-// var corsOptions = {
-//     origin: "http://localhost:3000"
-// };
-// app.use(cors(corsOptions));
+var corsOptions = {
+    origin: "http://localhost:8200"
+};
+app.use(cors(corsOptions));
 
 app.use(cors({credentials: true, origin:"http://localhost:3000"}))
 
@@ -34,7 +34,7 @@ require('./app/routes/user.routes')(app);
 app.use('/meet', rapatRoutes);
 app.use('/notulen', notulenRoutes);
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 9200;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
 });
