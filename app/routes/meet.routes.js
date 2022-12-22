@@ -46,9 +46,6 @@ router.put('/update-process',
         controller.updateMeet
     );
 router.put('/update-success', 
-        [
-            verifyMeet.checkDuplicateDate
-        ],
         controller.updateMeetSuccess
     );
 router.put('/update-finished', controller.updateMeetFinish);
