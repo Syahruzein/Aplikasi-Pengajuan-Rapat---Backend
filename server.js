@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express();
 const rapatRoutes = require('./app/routes/meet.routes');
 const notulenRoutes = require('./app/routes/notulen.routes');
-var whitelist = ['http://pjj2022-syahru.s3-website.ap-southeast-3.amazonaws.com/', 'http://localhost:8200']
+var whitelist = ['http://pjj2022-syahru.s3-website.ap-southeast-3.amazonaws.com/', 'https://apr-pens.netlify.app/', 'http://localhost:8200']
 
 // var corsOptions = {
 //     origin: "http://localhost:8200"
