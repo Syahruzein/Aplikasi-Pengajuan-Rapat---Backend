@@ -1,4 +1,5 @@
 const getDataAll = "SELECT * FROM users"
+const getDataAll2 = 'SELECT u.*, r.* FROM users u JOIN user_roles uu ON uu."userId" = u.id JOIN   roles r ON uu."roleId" = r.id'
 const getDataExcept = "SELECT * FROM users WHERE NOT username = $1 AND NOT username = 'admin'"
 const getDataExceptSubmission = "SELECT * FROM users WHERE NOT username = $1 AND NOT position = $2 AND NOT username = 'admin'"
 const getDataExecutive = "SELECT * FROM users WHERE position IS NOT NULL"
@@ -8,6 +9,7 @@ const getDataDirektur = "SELECT * FROM users WHERE position = 'Direktur'";
 
 module.exports = {
     getDataAll,
+    getDataAll2,
     getDataExcept,
     getDataExceptSubmission,
     getDataExecutive,

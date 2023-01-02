@@ -105,6 +105,11 @@ exports.signup = (req, res) => {
         res.status(500).send({ message: err.message });
       });
   };
+  exports.getAuth = (req, res) => {
+    pool.query(queries.getDataAll2).then((result) => {
+      return res.status(200).json(result.rows)
+    });
+  };
   exports.getAuthAll = (req, res) => {
     pool.query(queries.getDataAll).then((result) => {
       return res.status(200).json(result.rows)

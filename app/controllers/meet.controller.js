@@ -47,6 +47,19 @@ const getMeetProcess = (req, res) => {
     });
 };
 
+const getMeetProcessByStaff = (req, res) => {
+    const { receiver, maker } = req.params;
+    pool.query(queries.getDataProcessByStaff, [receiver, maker]).then((result) => {
+        return res.status('200').json(result.rows)
+    })
+    .catch( e => {
+        console.log('error mengambil data', e)
+        return res.status('500').json({
+            message: "Gagal mengambil data"
+        })
+    })
+}
+
 const getMeetProcessByPosition = (req, res) => {
     const { receiver } = req.params;
     pool.query(queries.getDataProcessByPosition, [receiver]).then((result) => {
@@ -71,6 +84,19 @@ const getMeetVerified = (req, res) => {
         return res.status(200).json(result.rows)
     });
 };
+
+const getMeetVerifiedByReceiverByMaker = (req, res) => {
+    const { receiver, maker } = req.params;
+    pool.query(queries.getDataVerifiedByReceiverByMaker, [receiver, maker]).then((result) => {
+        return res.status('200').json(result.rows)
+    })
+    .catch( e => {
+        console.log('error mengambil data', e)
+        return res.status('500').json({
+            message: "Gagal mengambil data"
+        })
+    })
+}
 
 const getMeetVerifiedById = (req, res) => {
     const { user_id } = req.params;
@@ -205,6 +231,18 @@ const getMeetFinished = (req, res) => {
     })
 };
 
+const getMeetFinishedByReceiverByMaker = (req, res) => {
+    const { receiver, maker } = req.params;
+    pool.query(queries.getDataFinishedByReceiverByMaker, [receiver, maker]).then((result) => {
+        return res.status('200').json(result.rows)
+    }).catch( e => {
+        console.log('error mengambil data', e)
+        return res.status('500').json({
+            message: "Gagal mengambil data"
+        })
+    })
+}
+
 const getMeetFinishedByUidByParticipants = (req, res) => {
     const { user_id, participants } = req.params;
     pool.query(queries.getDataFinishedByUidByParticipants, [user_id, participants]).then((result) => {
@@ -262,13 +300,13 @@ const getMeetRejectById = (req, res) => {
 
 const addMeet = (req, res) => {
     // const user_id = user.id;
-    const { perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, user_id, maker } = req.body;
+    const { perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, user_id, maker, verified } = req.body;
     if(perihal == '' || tempat == '' || tanggal == '' || waktu == '' || status == '' || receiver == '' || deskripsi == '' || user_id == '' || maker == ''){
         return res.status('400').json({
             message: 'Perintah Ditolak'
         })
     }
-    pool.query(queries.insertData, [perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, user_id, maker]).then((result) => {
+    pool.query(queries.insertData, [perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, user_id, maker, verified]).then((result) => {
         return res.status('200').json({
             message: 'Berhasil menambahkan data'
         })
@@ -284,7 +322,7 @@ const addMeet = (req, res) => {
 
 const updateMeet = (req, res) => {
     const { perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, id } = req.body;
-    if(perihal == '' || tempat == '' || tanggal == '' || waktu == '' || status == '' || receiver == '' || participants == '' || deskripsi == '' || id == '' ){
+    if(perihal == '' || tempat == '' || waktu == '' || status == '' || receiver == '' || participants == '' || deskripsi == '' || id == '' ){
         return res.status(400).json({
             message: 'Perintah ditolak'
         })
@@ -342,13 +380,13 @@ const updateMeetVerified = (req, res) => {
 }
 
 const updateMeetSuccess = (req, res) => {
-    const { perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, id } = req.body;
-    if(perihal == '' || tempat == '' || tanggal == '' || waktu == '' || status == '' || receiver == '' || deskripsi == '' || id == ''){
+    const { perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, verified, id } = req.body;
+    if(perihal == '' || tempat == '' || tanggal == '' || waktu == '' || status == '' || receiver == '' || deskripsi == '' || verified == '' || id == ''){
         return res.status(400).json({
             message: "Perintah ditolak"
         })
     }
-    pool.query(queries.updateData, [ perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, id ]).then((result) => {
+    pool.query(queries.updateDataVerified, [ perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, verified, id ]).then((result) => {
         return res.status('200').json({
             message: "Berhasil update data"
         })
@@ -362,9 +400,9 @@ const updateMeetSuccess = (req, res) => {
 }
 
 const updateMeetFinish = (req, res) => {
-    const { perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, id, notulen, meet_id } = req.body;
-    pool.query(queried.insertData, [ notulen, meet_id]).then(() => {
-        pool.query(queries.updateData, [ perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, id ]).then((result) => {
+    const { perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, verified, id, notulen, meet_id, maker } = req.body;
+    pool.query(queried.insertData, [ notulen, meet_id, maker]).then(() => {
+        pool.query(queries.updateDataVerified, [ perihal, tempat, tanggal, waktu, status, receiver, participants, deskripsi, verified, id ]).then((result) => {
             return res.status('200').json({
                 message: "Berhasil update data"
             })
@@ -445,10 +483,30 @@ const countMeetProcess = (req, res) => {
     });
 };
 
+const countMeetProcessByReceiverByMaker = (req, res) => {
+    const { receiver, maker } = req.params;
+    pool.query(queries.countDataProcessByReceiverByMaker, [receiver, maker]).then((result) => {
+        let totalMeet = result.rows[0].count
+        return res.status('200').json({
+            total: parseInt(totalMeet),
+        });
+    });
+};
+
 const countMeetSuccess = (req, res) => {
     pool.query(queries.countDataSuccess).then((result) => {
         let totalMeet = result.rows[0].count
         return res.status(200).json({
+            total: parseInt(totalMeet),
+        });
+    });
+};
+
+const countMeetSuccessByReceiverByMaker = (req, res) => {
+    const { receiver, maker } = req.params;
+    pool.query(queries.countDataSuccessByReceiverByMaker, [receiver, maker]).then((result) => {
+        let totalMeet = result.rows[0].count
+        return res.status('200').json({
             total: parseInt(totalMeet),
         });
     });
@@ -498,6 +556,16 @@ const countMeetFinished = (req, res) => {
     pool.query(queries.countDataFinished).then((result) => {
         let totalMeet = result.rows[0].count
         return res.status(200).json({
+            total: parseInt(totalMeet),
+        });
+    });
+};
+
+const countMeetFinishedByReceiverByMaker = (req, res) => {
+    const { receiver, maker } = req.params;
+    pool.query(queries.countDataFinishedByReceiverByMaker, [receiver, maker]).then((result) => {
+        let totalMeet = result.rows[0].count
+        return res.status('200').json({
             total: parseInt(totalMeet),
         });
     });
@@ -572,9 +640,11 @@ module.exports = {
     getMeetByDate,
     getMeetProcessById,
     getMeetProcess,
+    getMeetProcessByStaff,
     getMeetProcessByPosition,
     getMeetProcessAndVerified,
     getMeetVerified,
+    getMeetVerifiedByReceiverByMaker,
     getMeetVerifiedById,
     getMeetVerifiedByUsername,
     getMeetVerifiedByPosition,
@@ -585,6 +655,7 @@ module.exports = {
     getMeetVerifiedByDateByParticipants,
     getMeetVerifiedByDateByIdByReceiver,
     getMeetFinished,
+    getMeetFinishedByReceiverByMaker,
     getMeetFinishedByUidByParticipants,
     getMeetFinishedByReceiverByParticipants,
     getMeetFinishedByIdByReceiverByParticipants,
@@ -598,14 +669,17 @@ module.exports = {
     updateMeetReject,
     deleteMeet,
     countMeetProcess,
+    countMeetProcessByReceiverByMaker,
     countMeetProcessById,
     countMeetProcessByReceiver,
     countMeetSuccess,
+    countMeetSuccessByReceiverByMaker,
     countMeetSuccessById,
     countMeetSuccessByReceiver,
     countMeetSuccessByUsername,
     countMeetSuccessByIdByReceiver,
     countMeetFinished,
+    countMeetFinishedByReceiverByMaker,
     countMeetFinishedByUidByParticipants,
     countMeetFinishedByReceiverByParticipants,
     countMeetFinishedByIdByReceiverByParticipants,

@@ -29,9 +29,12 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
         },
         maker: {
-            type: Sequelize.STRING
+            type: Sequelize.ARRAY(Sequelize.STRING)
         },
         alasan: {
+            type: Sequelize.STRING
+        },
+        verified: {
             type: Sequelize.STRING
         },
         createdAt: {

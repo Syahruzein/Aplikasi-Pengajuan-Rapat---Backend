@@ -4,7 +4,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         },
         meet_id: {
-            type: Sequelize.STRING(1)
+            type: Sequelize.STRING
+        },
+        maker: {
+            type: Sequelize.STRING
         },
         createdAt: {
             allowNull: false,

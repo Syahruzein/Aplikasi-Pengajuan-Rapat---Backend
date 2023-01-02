@@ -4,25 +4,25 @@ const cors = require("cors");
 const app = express();
 const rapatRoutes = require('./app/routes/meet.routes');
 const notulenRoutes = require('./app/routes/notulen.routes');
-var whitelist = ['http://pjj2022-syahru.s3-website.ap-southeast-3.amazonaws.com', 'https://apr-pens.netlify.app', 'http://localhost:8200']
+// var whitelist = ['http://pjj2022-syahru.s3-website.ap-southeast-3.amazonaws.com', 'https://apr-pens.netlify.app', 'http://localhost:8200']
 
 // var corsOptions = {
 //     origin: "http://localhost:8200"
 // };
 
-var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
+// var corsOptions = {
+//   origin: function (origin, callback) {
+//     if (whitelist.indexOf(origin) !== -1) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error('Not allowed by CORS'))
+//     }
+//   }
+// }
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
-// app.use(cors({credentials: true, origin:"http://localhost:8200"}))
+app.use(cors({credentials: true, origin:"http://localhost:8200"}))
 
 app.use(bodyParser.json());
 

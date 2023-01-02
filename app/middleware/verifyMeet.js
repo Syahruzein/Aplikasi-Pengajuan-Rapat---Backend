@@ -30,23 +30,24 @@ checkDuplicateDate = (req, res, next) => {
         const times = req.body.waktu;
         // const dated = moment(dates + ' ' + times).tz('Asia/Jakarta').format('YYYY-MM-DD HH:mm:ss');
         const date = moment(dates).tz('Asia/Jakarta').format('YYYY-MM-DD');
-        const time = moment(times, [moment.ISO_8601, 'HH:mm']).tz('Asia/Jakarta').format('HH:mm:ss');
-        // const time = moment(times, [moment.ISO_8601, 'HH:mm']).tz('Asia/Jakarta').format('hh:mm:ss');
-        if(meet.length >= 3){
+        // const time = moment(times, [moment.ISO_8601, 'HH:mm']).tz('Asia/Jakarta').format('HH:mm:ss');
+        const time = moment(times, [moment.ISO_8601, 'HH:mm']).tz('Asia/Jakarta').format('hh:mm:ss');
+        if(meet.length >= 5){
             res.status(400).send({
                 message: "Failed! Tanggal tersebut sudah penuh!!"
             });
             return;
         }
-        console.log( date, 'disini')
-        console.log( time, 'disini')
+        // console.log( date, 'disini')
+        // console.log( time, 'disini')
         const startTime = moment(time, [moment.ISO_8601, 'HH:mm']).add(-2, 'hours').tz('Asia/Jakarta').format('HH:mm:ss');
         const beforeTime = moment(time, [moment.ISO_8601, 'HH:mm']).add(2, 'hours').tz('Asia/Jakarta').format('HH:mm:ss');
-        console.log( startTime, 'disini')
-        console.log( beforeTime, 'disini')
+        // console.log( startTime, 'disini')
+        // console.log( beforeTime, 'disini')
         Meet.findOne({
             where: {
                 tanggal: req.body.tanggal,
+                receiver: req.body.receiver,
                 waktu: {
                     [Op.between]: [startTime, beforeTime]
                 }
